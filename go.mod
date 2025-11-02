@@ -1,4 +1,4 @@
-module github.com/conradludgate/terraform-provider-spotify
+module github.com/brendanelmes/terraform-provider-spotify
 
 go 1.16
 

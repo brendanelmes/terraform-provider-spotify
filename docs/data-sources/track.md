@@ -7,27 +7,25 @@ description: |-
 
 # Data Source `spotify_track`
 
-
-
 ## Example Usage
 
 ```terraform
-data "spotify_track" "overkill" {
-  url = "https://open.spotify.com/track/4XdaaDFE881SlIaz31pTAG"
+data "spotify_track" "beastly" {
+  url = "https://open.spotify.com/track/5fl9iJbPf5ZPenmUJxH2k9"
 
   ## Computed
-  # name = "Overkill"
-  # artists = ["0qPGd8tOMHlFZt8EA1uLFY"]
-  # album = "64ey3KHg3uepidKmJrb4ka"
+  # name = "Beastly"
+  # artists = ["7pXu47GoqSYRajmBCjxdD6"]
+  # album = "3IOq7Wxdsy7YfT22zMPlmX"
 }
 
-data "spotify_track" "blackwater" {
-  spotify_id = "4lE6N1E0L8CssgKEUCgdbA"
+data "spotify_track" "new_beastly" {
+  spotify_id = "1yQNHzLx4VFofmUNHT3FHa"
 
   ## Computed
-  # name = "Blackwater"
-  # artists = ["0qPGd8tOMHlFZt8EA1uLFY"]
-  # album = "1AUS845POFhV3oDytPImEZ"
+  # name = "New Beastly"
+  # artists = ["7pXu47GoqSYRajmBCjxdD6"]
+  # album = "2yImgiwCG9KZnxzgulVthl"
 }
 ```
 

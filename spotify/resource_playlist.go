@@ -24,18 +24,18 @@ func resourcePlaylist() *schema.Resource {
 			"name": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "The name of the resulting playlist",
+				Description: "The name of the playlist",
 			},
 			"description": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "The description of the resulting playlist",
+				Description: "The description of the playlist",
 			},
 			"public": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     true,
-				Description: "Whether the playlist can be accessed publically",
+				Description: "Whether the playlist can be accessed publicly",
 			},
 			"tracks": {
 				Type:        schema.TypeList,

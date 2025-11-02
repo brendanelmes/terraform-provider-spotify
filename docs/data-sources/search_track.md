@@ -7,21 +7,19 @@ description: |-
 
 # Data Source `spotify_search_track`
 
-
-
 ## Example Usage
 
 ```terraform
-resource "spotify_playlist" "ariana_grande" {
-  name        = "My Ariana Grande Playlist"
+resource "spotify_playlist" "led_zeppelin" {
+  name        = "My Led Zeppelin Playlist"
 
   tracks = flatten([
-    spotify_search_track.ariana_grande.tracks[*].id,
+    spotify_search_track.led_zeppelin.tracks[*].id,
   ])
 }
 
-data "spotify_search_track" "ariana_grande" {
-  artist = "Ariana Grande"
+data "spotify_search_track" "led_zeppelin" {
+  artist = "Led Zeppelin"
   limit = 10
 }
 ```

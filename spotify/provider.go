@@ -8,39 +8,20 @@ import (
 func Provider() *schema.Provider {
 	return &schema.Provider{
 		Schema: map[string]*schema.Schema{
-			"auth_server": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Default:     "http://localhost:27228",
-				Description: "Oauth2 Proxy URL",
-			},
-			"token_id": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Default:     "terraform",
-				Description: "Oauth2 Proxy token ID",
-			},
-			"username": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Default:     "SpotifyAuthProxy",
-				Description: "Oauth2 Proxy username",
-			},
 			"api_key": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Oauth2 Proxy API Key",
+				Sensitive:   true,
+				DefaultFunc: schema.EnvDefaultFunc("SPOTIFY_API_KEY", nil),
+				Description: "Spotify API Key",
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
-			"spotify_playlist":       resourcePlaylist(),
-			"spotify_library":        resourceLibraryTracks(),
-			"spotify_library_albums": resourceLibraryAlbums(),
+			"spotify_playlist": resourcePlaylist(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"spotify_search_track": dataSourceSearchTrack(),
 			"spotify_track":        dataSourceTrack(),
-			"spotify_album":        dataSourceAlbum(),
 		},
 		ConfigureContextFunc: ClientConfigurer,
 	}

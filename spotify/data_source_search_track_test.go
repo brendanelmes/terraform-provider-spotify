@@ -14,7 +14,6 @@ func TestSpotify_DataSource_SearchTrack(t *testing.T) {
 	defer httpmock.DeactivateAndReset()
 
 	apiKey := "some-api-key"
-	accessToken := "some-access-token"
 
 	resource.Test(t, resource.TestCase{
 		IsUnitTest: true,
@@ -54,7 +53,15 @@ func TestSpotify_DataSource_SearchTrack(t *testing.T) {
 					resource.TestCheckResourceAttr("data.spotify_search_track.delta_heavy", "tracks.2.album", "album-4"),
 				),
 				PreConfig: func() {
-					RegisterAuthResponse(apiKey, accessToken)
+
+					httpmock.RegisterResponder("GET", "https://api.spotify.com/v1/me", RespondWith(
+						JSON(spotifyApi.PrivateUser{
+							User: spotifyApi.User{
+								ID: "user-1",
+							},
+						}),
+						VerifyBearer(apiKey),
+					))
 
 					httpmock.RegisterResponder("GET", "https://api.spotify.com/v1/search?limit=10&q=artist%3ADelta+Heavy&type=track",
 						RespondWith(
@@ -87,7 +94,7 @@ func TestSpotify_DataSource_SearchTrack(t *testing.T) {
 									},
 								}),
 							}),
-							VerifyBearer(accessToken),
+							VerifyBearer(apiKey),
 						),
 					)
 				},
@@ -107,8 +114,8 @@ type track struct {
 func fullTrackPage(tracks []track) *spotifyApi.FullTrackPage {
 	fullTracks := make([]spotifyApi.FullTrack, len(tracks))
 	for i, track := range tracks {
-		fullTracks[i].SimpleTrack.ID = spotifyApi.ID(track.id)
-		fullTracks[i].SimpleTrack.Name = track.name
+		fullTracks[i].ID = spotifyApi.ID(track.id)
+		fullTracks[i].Name = track.name
 		fullTracks[i].Album.ID = spotifyApi.ID(track.album)
 		fullTracks[i].Explicit = track.explicit
 		for _, artist := range track.artists {

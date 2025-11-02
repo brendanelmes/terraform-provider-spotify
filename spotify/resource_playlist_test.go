@@ -14,7 +14,6 @@ func TestSpotify_Resource_Playlist(t *testing.T) {
 	defer httpmock.DeactivateAndReset()
 
 	apiKey := "some-api-key"
-	accessToken := "some-access-token"
 
 	resource.Test(t, resource.TestCase{
 		IsUnitTest: true,
@@ -44,7 +43,6 @@ func TestSpotify_Resource_Playlist(t *testing.T) {
 					resource.TestCheckResourceAttr("spotify_playlist.playlist", "public", "true"),
 				),
 				PreConfig: func() {
-					RegisterAuthResponse(apiKey, accessToken)
 
 					httpmock.RegisterResponder("GET", "https://api.spotify.com/v1/me", RespondWith(
 						JSON(spotifyApi.PrivateUser{
@@ -52,7 +50,7 @@ func TestSpotify_Resource_Playlist(t *testing.T) {
 								ID: "user-1",
 							},
 						}),
-						VerifyBearer(accessToken),
+						VerifyBearer(apiKey),
 					))
 
 					httpmock.RegisterResponder("POST", "https://api.spotify.com/v1/users/user-1/playlists",
@@ -62,7 +60,7 @@ func TestSpotify_Resource_Playlist(t *testing.T) {
 									ID: spotifyApi.ID("spotify-playlist-1"),
 								},
 							}),
-							VerifyBearer(accessToken),
+							VerifyBearer(apiKey),
 							VerifyJSONBody(object{
 								"name":          "My Playlist",
 								"description":   "A test playlist",
@@ -75,7 +73,7 @@ func TestSpotify_Resource_Playlist(t *testing.T) {
 					httpmock.RegisterResponder("POST", "https://api.spotify.com/v1/playlists/spotify-playlist-1/tracks",
 						RespondWith(
 							JSON(object{"snapshot_id": "snapshot1"}),
-							VerifyBearer(accessToken),
+							VerifyBearer(apiKey),
 							VerifyJSONBody(object{
 								"uris": array{
 									"spotify:track:track-1",
@@ -96,14 +94,14 @@ func TestSpotify_Resource_Playlist(t *testing.T) {
 								},
 								Description: "A test playlist",
 							}),
-							VerifyBearer(accessToken),
+							VerifyBearer(apiKey),
 						),
 					)
 
 					httpmock.RegisterResponder("GET", "https://api.spotify.com/v1/playlists/spotify-playlist-1/tracks",
 						RespondWith(
 							JSON(playlistTrackPage("track-1", "track-2")),
-							VerifyBearer(accessToken),
+							VerifyBearer(apiKey),
 						),
 					)
 				},
@@ -135,7 +133,7 @@ func TestSpotify_Resource_Playlist(t *testing.T) {
 					httpmock.RegisterResponder("PUT", "https://api.spotify.com/v1/playlists/spotify-playlist-1",
 						RespondWith(
 							JSON(nil),
-							VerifyBearer(accessToken),
+							VerifyBearer(apiKey),
 							VerifyJSONBody(object{
 								"name":        "My New Playlist",
 								"description": "A test playlist",
@@ -147,7 +145,7 @@ func TestSpotify_Resource_Playlist(t *testing.T) {
 					httpmock.RegisterResponder("PUT", "https://api.spotify.com/v1/playlists/spotify-playlist-1/tracks?uris=spotify:track:track-1,spotify:track:track-3",
 						RespondWith(
 							JSON(object{"snapshot_id": "snapshot2"}),
-							VerifyBearer(accessToken),
+							VerifyBearer(apiKey),
 						).Once(),
 					)
 
@@ -162,21 +160,21 @@ func TestSpotify_Resource_Playlist(t *testing.T) {
 								},
 								Description: "A test playlist",
 							}),
-							VerifyBearer(accessToken),
+							VerifyBearer(apiKey),
 						),
 					)
 
 					httpmock.RegisterResponder("GET", "https://api.spotify.com/v1/playlists/spotify-playlist-1/tracks",
 						RespondWith(
 							JSON(playlistTrackPage("track-1", "track-3")),
-							VerifyBearer(accessToken),
+							VerifyBearer(apiKey),
 						),
 					)
 
 					httpmock.RegisterResponder("DELETE", "https://api.spotify.com/v1/playlists/spotify-playlist-1/followers",
 						RespondWith(
 							JSON(nil),
-							VerifyBearer(accessToken),
+							VerifyBearer(apiKey),
 						),
 					)
 				},
