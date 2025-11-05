@@ -18,20 +18,17 @@ resource "spotify_playlist" "playlist" {
   public      = false
 
   tracks = [
-    data.spotify_track.overkill.id,
-    data.spotify_track.blackwater.id,
-    data.spotify_track.snowblind.id,
+    data.spotify_track.never_gonna_give_you_up.id,
+    data.spotify_track.careless_whisper.id,
+    "5jr6pG3khBcBXZRm8NogSe",
   ]
 }
 
-data "spotify_track" "overkill" {
-  url = "https://open.spotify.com/track/4XdaaDFE881SlIaz31pTAG"
+data "spotify_track" "never_gonna_give_you_up" {
+  url = "https://open.spotify.com/track/4PTG3Z6ehGkBFwjybzWkR8"
 }
-data "spotify_track" "blackwater" {
-  url = "https://open.spotify.com/track/4lE6N1E0L8CssgKEUCgdbA"
-}
-data "spotify_track" "snowblind" {
-  url = "https://open.spotify.com/track/7FCG2wIYG1XvGRUMACC2cD"
+data "spotify_track" "careless_whisper" {
+  spotify_id = "5WDLRQ3VCdVrKw0njWe5E5?si=44a369c142b144ad"
 }
 ```
 
@@ -46,7 +43,7 @@ data "spotify_track" "snowblind" {
 
 - **description** (String) The description of the resulting playlist
 - **id** (String) The ID of this resource.
-- **public** (Boolean) Whether the playlist can be accessed publically
+- **public** (Boolean) Whether the playlist can be accessed publicly
 
 ### Read-only
 

@@ -6,13 +6,11 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
-	"time"
 
-	"github.com/conradludgate/terraform-provider-spotify/spotify"
+	"github.com/brendanelmes/terraform-provider-spotify/spotify"
 	"github.com/go-test/deep"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/jarcoal/httpmock"
-	"golang.org/x/oauth2"
 )
 
 var testAccProviders map[string]*schema.Provider
@@ -25,34 +23,13 @@ func init() {
 	}
 }
 
-func RegisterAuthResponse(apiKey, accessToken string) {
-	httpmock.RegisterResponder("POST", "http://localhost:27228/api/v1/token/terraform",
-		RespondWith(
-			JSON(oauth2.Token{AccessToken: accessToken, Expiry: time.Now().Add(time.Hour)}),
-			VerifyBasicAuth("SpotifyAuthProxy", apiKey),
-		),
-	)
-}
-
 type Verifier func(req *http.Request) error
 
-func VerifyBearer(accessToken string) Verifier {
+func VerifyBearer(apiKey string) Verifier {
 	return func(req *http.Request) error {
-		if req.Header.Get("Authorization") != fmt.Sprintf("Bearer %s", accessToken) {
-			return errors.New("invalid access token")
-		}
-		return nil
-	}
-}
-
-func VerifyBasicAuth(username, password string) Verifier {
-	return func(req *http.Request) error {
-		user, pass, ok := req.BasicAuth()
-		if !ok {
-			return errors.New("missing auth")
-		}
-		if user != username || pass != password {
-			return errors.New("invalid auth")
+		expected := fmt.Sprintf("Bearer %s", apiKey)
+		if got := req.Header.Get("Authorization"); got != expected {
+			return fmt.Errorf("expected Authorization header %q, got %q", expected, got)
 		}
 		return nil
 	}

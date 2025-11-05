@@ -14,7 +14,6 @@ func TestSpotify_DataSource_Track(t *testing.T) {
 	defer httpmock.DeactivateAndReset()
 
 	apiKey := "some-api-key"
-	accessToken := "some-access-token"
 
 	resource.Test(t, resource.TestCase{
 		IsUnitTest: true,
@@ -48,7 +47,15 @@ func TestSpotify_DataSource_Track(t *testing.T) {
 					resource.TestCheckResourceAttr("data.spotify_track.track-2", "artists.0", "0qPGd8tOMHlFZt8EA1uLFY"),
 				),
 				PreConfig: func() {
-					RegisterAuthResponse(apiKey, accessToken)
+
+					httpmock.RegisterResponder("GET", "https://api.spotify.com/v1/me", RespondWith(
+						JSON(spotifyApi.PrivateUser{
+							User: spotifyApi.User{
+								ID: "user-1",
+							},
+						}),
+						VerifyBearer(apiKey),
+					))
 
 					httpmock.RegisterResponder("GET", "https://api.spotify.com/v1/tracks/4lE6N1E0L8CssgKEUCgdbA",
 						RespondWith(
@@ -66,7 +73,7 @@ func TestSpotify_DataSource_Track(t *testing.T) {
 									ID: "1AUS845POFhV3oDytPImEZ",
 								},
 							}),
-							VerifyBearer(accessToken),
+							VerifyBearer(apiKey),
 						),
 					)
 
@@ -86,7 +93,7 @@ func TestSpotify_DataSource_Track(t *testing.T) {
 									ID: "64ey3KHg3uepidKmJrb4ka",
 								},
 							}),
-							VerifyBearer(accessToken),
+							VerifyBearer(apiKey),
 						),
 					)
 				},
