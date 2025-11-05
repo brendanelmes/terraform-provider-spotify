@@ -18,7 +18,7 @@ there are some distinct differences:
 
 ```tf
 resource "spotify_playlist" "playlist" {
-  name        = "Fire Playlist"
+  name        = "Super Hot Fire Playlist"
   description = "My playlist is super hot fire"
   public      = false
 
