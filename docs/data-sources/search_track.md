@@ -11,7 +11,7 @@ description: |-
 
 ```terraform
 resource "spotify_playlist" "led_zeppelin" {
-  name        = "My Led Zeppelin Playlist"
+  name        = "My Led Zep Playlist"
 
   tracks = flatten([
     spotify_search_track.led_zeppelin.tracks[*].id,
